@@ -1,10 +1,11 @@
 import matplotlib.pyplot as plt
+import numpy as np
 # verlet : x(t + delta t) = 2x(t) - x(t- delta t) + a(t) delta t^2
 
 delta_t = 0.01
 x0 = 2
 v0 = 2
-steps = 20**3
+t_max = 100
 
 
 k = 10
@@ -15,7 +16,7 @@ def a(x):
     return - k * x / m
 
 
-def verlet_method(steps, delta_t, x0, v0):
+def verlet_method(t_max, delta_t, x0, v0):
 
     delta_t2 = delta_t * delta_t
     x1 = x0 + v0 * delta_t + 0.5 * a(x0) * delta_t2
@@ -25,14 +26,14 @@ def verlet_method(steps, delta_t, x0, v0):
 
     position = [x0]
     velocity = [v0]
-    time = [delta_t]
+    time = [0]
 
-    for i in range(2, steps - 2):
+    for t in np.arange(delta_t, 20, delta_t):
         x_next = 2 * xt - xt_old + a(xt) * delta_t2
         vt = (x_next - xt_old) / (2 * delta_t)
 
         position.append(xt)
-        time.append((i - 1) * delta_t)
+        time.append(t)
         velocity.append(vt)
         xt_old = xt
         xt = x_next
@@ -50,7 +51,7 @@ def Energy(v, x):
     return energy
 
 
-verlet = verlet_method(steps, delta_t, x0, v0)
+verlet = verlet_method(t_max, delta_t, x0, v0)
 energy = Energy(verlet["v"], verlet["x"])
 
 plt.plot(verlet["t"], verlet["x"])
